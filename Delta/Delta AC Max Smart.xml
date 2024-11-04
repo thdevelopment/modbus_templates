@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Templates format="2" protocolVersion="84">
-  <Template revision="1.0" d="11538958-91b8-438c-a588-37df895f3845">
+  <Template revision="1.0" id="11538958-91b8-438c-a588-37df895f3845">
     <SuggestedCCUParameters>
       <TcpPort>502</TcpPort>
       <DelayBetweenRequests>500</DelayBetweenRequests>
