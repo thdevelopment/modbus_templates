@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="83">
+  <Template revision="1.0" id="dbc1a574-6cae-406b-8a61-a78c343ed3c9">
+    <SuggestedCCUParameters>
+      <UseAsciiCommunication>False</UseAsciiCommunication>
+      <StopBits>One</StopBits>
+      <DataBits>8</DataBits>
+      <Parity>None</Parity>
+      <Baudrate>9600</Baudrate>
+      <DelayBetweenRequests>-1</DelayBetweenRequests>
+      <ReadWriteTimeout>1000</ReadWriteTimeout>
+    </SuggestedCCUParameters>
+    <ImportParameters>
+      <Parameter>
+        <Id>SlaveId</Id>
+        <Name>Slave Id</Name>
+        <Value>1</Value>
+      </Parameter>
+      <Parameter>
+        <Id>IpAddress</Id>
+        <Name>IP address</Name>
+        <Value>192.168.1.0</Value>
+      </Parameter>
+    </ImportParameters>
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>ComWinTop - 8 channels PT100/PT1000</Name>
+    <CcuModel>ModbusRtuCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+    <Module>
+      <Name>ComWinTop - 8 channels PT100/PT1000</Name>
+      <Id>-1</Id>
+      <Model>ModbusModule</Model>
+      <DeviceProperties>
+        <DeviceType>7001</DeviceType>
+        <InternalPollInterval>30000</InternalPollInterval>
+        <PrefetchModeId>0</PrefetchModeId>
+        <ServiceAttributesFormulas>[{"AttributeDefinition":{"Name":"Slave ID"},"ReadFormula":"getbyte(modbusr(H, 0x10, Uint16), 1)"},{"AttributeDefinition":{"Name":"Speed"},"ReadFormula":"var ret := getbyte(modbusr(H, 0x10, Uint16), 0);\r\n\r\nswitch(getbits(ret, 0, 3),\r\n0, \u00229600 (default)\u0022,\r\n1, \u00221200\u0022,\r\n2, \u00222400\u0022,\r\n3, \u00224800\u0022,\r\n4, \u00229600\u0022,\r\n5, \u002214400\u0022,\r\n6, \u002219200\u0022,\r\n\u0022unknown\u0022);\r\n"},{"AttributeDefinition":{"Name":"Parity"},"ReadFormula":"var ret := getbyte(modbusr(H, 0x10, Uint16), 0);\r\n\r\nswitch(getbits(ret, 3, 2),\r\n0, \u0022None\u0022,\r\n1, \u0022Even\u0022,\r\n2, \u0022Odd\u0022,\r\n\u0022Odd\u0022);"}]</ServiceAttributesFormulas>
+        <ServiceActionsScripts>[]</ServiceActionsScripts>
+        <SlaveId>$[SlaveId]</SlaveId>
+        <MaxPrefetchGroupSize>100</MaxPrefetchGroupSize>
+        <IpAddress>$[IpAddress]</IpAddress>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>${temperatureSensor} (1)</Name>
+          <Model>ModbusTemperatureSensor</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <InitializeScript></InitializeScript>
+            <ReadScript></ReadScript>
+            <PrefetchModeId>0</PrefetchModeId>
+            <ServiceAttributesFormulas></ServiceAttributesFormulas>
+            <ServiceActionsScripts></ServiceActionsScripts>
+            <CustomDeviceVariables />
+            <ReadTemperature>MODBUSR(H, 0x30, float)</ReadTemperature>
+            <ReadHumidity></ReadHumidity>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${temperatureSensor} (2)</Name>
+          <Model>ModbusTemperatureSensor</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <InitializeScript></InitializeScript>
+            <ReadScript></ReadScript>
+            <PrefetchModeId>0</PrefetchModeId>
+            <ServiceAttributesFormulas></ServiceAttributesFormulas>
+            <ServiceActionsScripts></ServiceActionsScripts>
+            <CustomDeviceVariables />
+            <ReadTemperature>MODBUSR(H, 0x32, Float)</ReadTemperature>
+            <ReadHumidity></ReadHumidity>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${temperatureSensor} (3)</Name>
+          <Model>ModbusTemperatureSensor</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <InitializeScript></InitializeScript>
+            <ReadScript></ReadScript>
+            <PrefetchModeId>0</PrefetchModeId>
+            <ServiceAttributesFormulas></ServiceAttributesFormulas>
+            <ServiceActionsScripts></ServiceActionsScripts>
+            <CustomDeviceVariables />
+            <ReadTemperature>MODBUSR(H, 0x34, Float)</ReadTemperature>
+            <ReadHumidity></ReadHumidity>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${temperatureSensor} (4)</Name>
+          <Model>ModbusTemperatureSensor</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <InitializeScript></InitializeScript>
+            <ReadScript></ReadScript>
+            <PrefetchModeId>0</PrefetchModeId>
+            <ServiceAttributesFormulas></ServiceAttributesFormulas>
+            <ServiceActionsScripts></ServiceActionsScripts>
+            <CustomDeviceVariables />
+            <ReadTemperature>MODBUSR(H, 0x36, Float)</ReadTemperature>
+            <ReadHumidity></ReadHumidity>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${temperatureSensor} (5)</Name>
+          <Model>ModbusTemperatureSensor</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <InitializeScript></InitializeScript>
+            <ReadScript></ReadScript>
+            <PrefetchModeId>0</PrefetchModeId>
+            <ServiceAttributesFormulas></ServiceAttributesFormulas>
+            <ServiceActionsScripts></ServiceActionsScripts>
+            <CustomDeviceVariables />
+            <ReadTemperature>MODBUSR(H, 0x38, Float)</ReadTemperature>
+            <ReadHumidity></ReadHumidity>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${temperatureSensor} (6)</Name>
+          <Model>ModbusTemperatureSensor</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <InitializeScript></InitializeScript>
+            <ReadScript></ReadScript>
+            <PrefetchModeId>0</PrefetchModeId>
+            <ServiceAttributesFormulas></ServiceAttributesFormulas>
+            <ServiceActionsScripts></ServiceActionsScripts>
+            <CustomDeviceVariables />
+            <ReadTemperature>MODBUSR(H, 0x3A, Float)</ReadTemperature>
+            <ReadHumidity></ReadHumidity>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${temperatureSensor} (7)</Name>
+          <Model>ModbusTemperatureSensor</Model>
+          <Id>-8</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <InitializeScript></InitializeScript>
+            <ReadScript></ReadScript>
+            <PrefetchModeId>0</PrefetchModeId>
+            <ServiceAttributesFormulas></ServiceAttributesFormulas>
+            <ServiceActionsScripts></ServiceActionsScripts>
+            <CustomDeviceVariables />
+            <ReadTemperature>MODBUSR(H, 0x3C, Float)</ReadTemperature>
+            <ReadHumidity></ReadHumidity>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${temperatureSensor} (8)</Name>
+          <Model>ModbusTemperatureSensor</Model>
+          <Id>-9</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <InitializeScript></InitializeScript>
+            <ReadScript></ReadScript>
+            <PrefetchModeId>0</PrefetchModeId>
+            <ServiceAttributesFormulas></ServiceAttributesFormulas>
+            <ServiceActionsScripts></ServiceActionsScripts>
+            <CustomDeviceVariables />
+            <ReadTemperature>MODBUSR(H, 0x3E, Float)</ReadTemperature>
+            <ReadHumidity></ReadHumidity>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
