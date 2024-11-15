@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Templates format="2" protocolVersion="82">
+  <Template revision="1.0" id="719298fe-e817-4e76-ac82-27420e66fdd2">
+    <SuggestedCCUParameters>
+      <UseAsciiCommunication>False</UseAsciiCommunication>
+      <StopBits>One</StopBits>
+      <DataBits>8</DataBits>
+      <Parity>None</Parity>
+      <Baudrate>57600</Baudrate>
+      <DelayBetweenRequests>-1</DelayBetweenRequests>
+      <ReadWriteTimeout>1000</ReadWriteTimeout>
+    </SuggestedCCUParameters>
+    <ImportParameters>
+      <Parameter>
+        <Id>SlaveId</Id>
+        <Name>Slave Id</Name>
+        <Value>1</Value>
+      </Parameter>
+      <Parameter>
+        <Id>IpAddress</Id>
+        <Name>IP address</Name>
+        <Value>192.168.1.0</Value>
+      </Parameter>
+    </ImportParameters>
+    <RevisionHistory>
+      <Revision id="1.0">Initial version</Revision>
+    </RevisionHistory>
+    <Name>Schrack i-CHARGE CION</Name>
+    <CcuModel>ModbusRtuCCU</CcuModel>
+    <Producer></Producer>
+    <Model></Model>
+    <Description></Description>
+    <Module>
+      <Name>Schrack i-CHARGE CION</Name>
+      <Id>-1</Id>
+      <Model>ModbusModule</Model>
+      <DeviceProperties>
+        <DeviceType>7001</DeviceType>
+        <InternalPollInterval>30000</InternalPollInterval>
+        <ReadScript>if(modbusr(H, 306, Uint16), ADDWARNING("Storung"));
+if(modbusr(H, 146, Uint16), ADDWARNING("Plausibitatzfehler bei PPbzw. CP"));
+var r121 := modbusr(H, 121, Uint16);
+if(getbit(r121, 6), ADDWARNING("Sammelstorung"));
+if(getbit(r121, 7), ADDWARNING("Storung: Netzausfall FI/LS"));
+if(getbit(r121, 8), ADDWARNING("Storung: Ladekabel"));
+if(getbit(r121, 9), ADDWARNING("Storung: Ladekabel abgewiesen"));
+if(getbit(r121, 10), ADDWARNING("Storung: charging contactor"));
+if(getbit(r121, 12), ADDWARNING("Storung: RCMU Selbttest fehler"));
+if(getbit(r121, 13), ADDWARNING("Storung: Fehlerstrom"));</ReadScript>
+        <PrefetchModeId>0</PrefetchModeId>
+        <ServiceAttributesFormulas>[{"AttributeDefinition":{"Name":"Herstellerbezeichnung"},"ReadFormula":"modbusr(H, 800, String, 15)"},{"AttributeDefinition":{"Name":"Geratebezeichnung"},"ReadFormula":"modbusr(H, 816, String, 15)"},{"AttributeDefinition":{"Name":"Firmwareversion"},"ReadFormula":"modbusr(H, 832, String, 16)"},{"AttributeDefinition":{"Name":"Baudrate"},"ReadFormula":"switch(modbusr(H, 509, Uint16),\r\n0, 9600,\r\n1, 14400,\r\n2, 19200,\r\n3, 28800,\r\n4, 38400,\r\n5, 57600,\r\n115200)\r\n"},{"AttributeDefinition":{"Name":"RFID Tag"},"ReadFormula":"modbusr(H, 129, String, 4)"}]</ServiceAttributesFormulas>
+        <ServiceActionsScripts>[{"ActionDefinition":{"Name":"Controller Neustart","NumericParameters":[],"BoolParameters":[],"EnumParameters":[]},"Script":"modbusw(H, 1000, Uint16, 1234)"}]</ServiceActionsScripts>
+        <SlaveId>$[SlaveId]</SlaveId>
+        <MaxPrefetchGroupSize>100</MaxPrefetchGroupSize>
+        <IpAddress>$[IpAddress]</IpAddress>
+      </DeviceProperties>
+      <Devices>
+        <Device>
+          <Name>Aktueller Ladestrom</Name>
+          <Model>ModbusVariable</Model>
+          <Id>-2</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions>{"88":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:88}\u0022}"}</SerializedValueLogTypeConversions>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <InitializeScript></InitializeScript>
+            <ReadScript></ReadScript>
+            <PrefetchModeId>0</PrefetchModeId>
+            <ServiceAttributesFormulas></ServiceAttributesFormulas>
+            <ServiceActionsScripts></ServiceActionsScripts>
+            <CustomDeviceVariables />
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadState>MODBUSR(H, 126, Uint16)</ReadState>
+            <WriteState></WriteState>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${charging}</Name>
+          <Model>ModbusSwitch</Model>
+          <Id>-3</Id>
+          <DeviceProperties>
+            <DeviceType>136</DeviceType>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <InitializeScript></InitializeScript>
+            <ReadScript></ReadScript>
+            <PrefetchModeId>0</PrefetchModeId>
+            <ServiceAttributesFormulas>[{"AttributeDefinition":{"Name":"Ladedauer"},"ReadFormula":"var total := MODBUSR(H, 151, LittleEndianUint32);\r\nvar sec := mod(total, 60);\r\nvar min := mod(floor(total/60), 60);\r\nvar hod := floor(total/3600);\r\n\r\nhod \u002B \u0022:\u0022 \u002B tostring(min, \u0022X2\u0022) \u002B \u0022:\u0022 \u002B tostring(sec, \u0022X2\u0022)"}]</ServiceAttributesFormulas>
+            <ServiceActionsScripts></ServiceActionsScripts>
+            <CustomDeviceVariables />
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <NegateState>False</NegateState>
+            <OnStateIconId>226</OnStateIconId>
+            <OffStateIconId>227</OffStateIconId>
+            <OnStateName>${general_enabled}</OnStateName>
+            <OffStateName>${general_disabled}</OffStateName>
+            <ReadSwitchState>MODBUSR(H, 100, Uint16)</ReadSwitchState>
+            <WriteSwitchState>MODBUSW(H, 100, Uint16, St)</WriteSwitchState>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>CP-Status</Name>
+          <Model>ModbusMultiValueSwitch</Model>
+          <Id>-4</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <InitializeScript></InitializeScript>
+            <ReadScript></ReadScript>
+            <PrefetchModeId>0</PrefetchModeId>
+            <ServiceAttributesFormulas></ServiceAttributesFormulas>
+            <ServiceActionsScripts></ServiceActionsScripts>
+            <CustomDeviceVariables />
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>3</Value3Index>
+            <Value4Index>4</Value4Index>
+            <Value5Index>5</Value5Index>
+            <Value6Index>6</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>A - Standby</Value0Name>
+            <Value1Name>B - Vehicle detected</Value1Name>
+            <Value2Name>C - Ready (charging)</Value2Name>
+            <Value3Name>D - With ventilation </Value3Name>
+            <Value4Name>E - No power (shut off) </Value4Name>
+            <Value5Name>F - Error</Value5Name>
+            <Value6Name>U - Unknown</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>16</Value0IconId>
+            <Value1IconId>1044</Value1IconId>
+            <Value2IconId>222</Value2IconId>
+            <Value3IconId>23</Value3IconId>
+            <Value4IconId>61</Value4IconId>
+            <Value5IconId>57</Value5IconId>
+            <Value6IconId>19</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>-1</OffStateValue>
+            <ReadSwitchState>switch(MODBUSR(H, 139, Uint16),
+65, 0,
+66, 1,
+67, 2,
+68, 3,
+69, 4,
+70, 5,
+6)</ReadSwitchState>
+            <WriteSwitchState></WriteSwitchState>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Laderkabel angesteckt</Name>
+          <Model>ModbusReedContact</Model>
+          <Id>-5</Id>
+          <DeviceProperties>
+            <DeviceType>1102</DeviceType>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <InitializeScript></InitializeScript>
+            <ReadScript></ReadScript>
+            <PrefetchModeId>0</PrefetchModeId>
+            <ServiceAttributesFormulas>[{"AttributeDefinition":{"Name":"Angesteckt-Dauer"},"ReadFormula":"var total := MODBUSR(H, 153, LittleEndianUint32);\r\nvar sec := mod(total, 60);\r\nvar min := mod(floor(total/60), 60);\r\nvar hod := floor(total/3600);\r\n\r\nhod \u002B \u0022:\u0022 \u002B tostring(min, \u0022X2\u0022) \u002B \u0022:\u0022 \u002B tostring(sec, \u0022X2\u0022)"}]</ServiceAttributesFormulas>
+            <ServiceActionsScripts></ServiceActionsScripts>
+            <CustomDeviceVariables />
+            <OnStateIconId>222</OnStateIconId>
+            <OffStateIconId>223</OffStateIconId>
+            <OnStateName>${general_plugged}</OnStateName>
+            <OffStateName>${general_unplugged}</OffStateName>
+            <ReadState>GETBIT(MODBUSR(H, 121, Uint16), 0)</ReadState>
+            <NegateState>False</NegateState>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Ladestromvorgabe</Name>
+          <Model>ModbusVariable</Model>
+          <Id>-6</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions>{"88":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:88}\u0022}"}</SerializedValueLogTypeConversions>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <InitializeScript></InitializeScript>
+            <ReadScript></ReadScript>
+            <PrefetchModeId>0</PrefetchModeId>
+            <ServiceAttributesFormulas></ServiceAttributesFormulas>
+            <ServiceActionsScripts></ServiceActionsScripts>
+            <CustomDeviceVariables />
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>False</IsReadOnly>
+            <ReadState>MODBUSR(H, 101, Uint16)</ReadState>
+            <WriteState>MODBUSW(H, 101, Uint16, LINEAR(Va, 6, 6, 32, 32, BOUNDS))</WriteState>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Ladestromvorgabe min.</Name>
+          <Model>ModbusVariable</Model>
+          <Id>-7</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions>{"88":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:88}\u0022}"}</SerializedValueLogTypeConversions>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <InitializeScript></InitializeScript>
+            <ReadScript></ReadScript>
+            <PrefetchModeId>0</PrefetchModeId>
+            <ServiceAttributesFormulas></ServiceAttributesFormulas>
+            <ServiceActionsScripts></ServiceActionsScripts>
+            <CustomDeviceVariables />
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadState>MODBUSR(H, 507, Uint16)</ReadState>
+            <WriteState>MODBUSW(H, 507, Uint16, LINEAR(Va, 6, 6, 32, 32, BOUNDS))</WriteState>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Spannung von Phase 1</Name>
+          <Model>ModbusVariable</Model>
+          <Id>-8</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <SerializedValueLogTypeConversions>{"87":"{\u0022ValueLogTypeConversionTypeId\u0022:3,\u0022SerializedValueLogTypeConversion\u0022:\u0022{\\u0022Value1OnInput\\u0022:0,\\u0022Value1OnOutput\\u0022:0,\\u0022Value2OnInput\\u0022:1,\\u0022Value2OnOutput\\u0022:1,\\u0022SourceValueLogTypes\\u0022:[62],\\u0022TargetValueLogType\\u0022:87}\u0022}"}</SerializedValueLogTypeConversions>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <InitializeScript></InitializeScript>
+            <ReadScript></ReadScript>
+            <PrefetchModeId>0</PrefetchModeId>
+            <ServiceAttributesFormulas></ServiceAttributesFormulas>
+            <ServiceActionsScripts></ServiceActionsScripts>
+            <CustomDeviceVariables />
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <IsReadOnly>True</IsReadOnly>
+            <ReadState>MODBUSR(H, 167, Uint16)</ReadState>
+            <WriteState></WriteState>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>${temperatureSensor}</Name>
+          <Model>ModbusTemperatureSensor</Model>
+          <Id>-9</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <InternalPollInterval>15000</InternalPollInterval>
+            <InitializeScript></InitializeScript>
+            <ReadScript></ReadScript>
+            <PrefetchModeId>0</PrefetchModeId>
+            <ServiceAttributesFormulas></ServiceAttributesFormulas>
+            <ServiceActionsScripts></ServiceActionsScripts>
+            <CustomDeviceVariables />
+            <ReadTemperature>MODBUSR(H, 303, Uint16)</ReadTemperature>
+            <ReadHumidity></ReadHumidity>
+          </DeviceProperties>
+        </Device>
+        <Device>
+          <Name>Verriegelung</Name>
+          <Model>ModbusMultiValueSwitch</Model>
+          <Id>-10</Id>
+          <DeviceProperties>
+            <DeviceType>0</DeviceType>
+            <InternalPollInterval>2500</InternalPollInterval>
+            <InitializeScript></InitializeScript>
+            <ReadScript></ReadScript>
+            <PrefetchModeId>0</PrefetchModeId>
+            <ServiceAttributesFormulas></ServiceAttributesFormulas>
+            <ServiceActionsScripts></ServiceActionsScripts>
+            <CustomDeviceVariables />
+            <ShouldDoPeriodicWrite>False</ShouldDoPeriodicWrite>
+            <Value0Index>0</Value0Index>
+            <Value1Index>1</Value1Index>
+            <Value2Index>2</Value2Index>
+            <Value3Index>67</Value3Index>
+            <Value4Index>68</Value4Index>
+            <Value5Index>69</Value5Index>
+            <Value6Index>70</Value6Index>
+            <Value7Index>71</Value7Index>
+            <Value8Index>72</Value8Index>
+            <Value9Index>73</Value9Index>
+            <Value0Name>Automatic</Value0Name>
+            <Value1Name>Verriegeln</Value1Name>
+            <Value2Name>Entriegeln</Value2Name>
+            <Value3Name>3</Value3Name>
+            <Value4Name>4</Value4Name>
+            <Value5Name>5</Value5Name>
+            <Value6Name>6</Value6Name>
+            <Value7Name>7</Value7Name>
+            <Value8Name>8</Value8Name>
+            <Value9Name>9</Value9Name>
+            <Value0IconId>39</Value0IconId>
+            <Value1IconId>220</Value1IconId>
+            <Value2IconId>221</Value2IconId>
+            <Value3IconId>8</Value3IconId>
+            <Value4IconId>9</Value4IconId>
+            <Value5IconId>10</Value5IconId>
+            <Value6IconId>11</Value6IconId>
+            <Value7IconId>12</Value7IconId>
+            <Value8IconId>13</Value8IconId>
+            <Value9IconId>14</Value9IconId>
+            <OffStateValue>-1</OffStateValue>
+            <ReadSwitchState>switch(MODBUSR(H, 118, Uint16),
+1, 1,
+2, 2,
+0)</ReadSwitchState>
+            <WriteSwitchState>MODBUSW(H, 118, Uint16, Mu)</WriteSwitchState>
+          </DeviceProperties>
+        </Device>
+      </Devices>
+    </Module>
+  </Template>
+</Templates>
