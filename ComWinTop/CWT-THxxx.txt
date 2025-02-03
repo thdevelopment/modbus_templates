@@ -1,0 +1,15 @@
+Cable color
+
+Brown Power +(DC5-30V)
+
+black Power -
+
+Yellow （or green） RS485 A+
+
+Blue RS485 B-
+
+
+RS485 communication Default
+parameters: 4800,n,8,1
+
+Default device address is 1

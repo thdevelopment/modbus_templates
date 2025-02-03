@@ -1,6 +1,6 @@
 # Modbus Templates for TapHome
 
-This project is official repository of TapHome smart system. It is managed by TapHome employees, any contributions from community are wellcome!
+This project is official repository of TapHome smart system. It is managed by TapHome employees, any contributions from community are welcome!
 
 ## How to create XML template
 XML template can be generated in TapHome apps in Hardware -> Modbus RTU / TCP -> Modbus module -> Save as template.
